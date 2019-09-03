@@ -1,6 +1,19 @@
 var topics = ["one piece", "dragon ball Z", "Attack on titan", "bleach", "black clover", "one punch man", "my hero academia", "the rise of the shield hero"];
+function renderButtons() {
+    $("#buttons-div").empty();
+    for (var i = 0; i < topics.length; i++) {
+        var b = $("<button>");
+        b.addClass("btn btn-primary btn-xs anime-button");
+        b.attr("id", "anime-button");
+        b.attr("data-name", topics[i]);
+        b.text(topics[i]);
+        $("#buttons-div").append(b);
+        console.log(topics[i]);
+    };
+};
 
-$(".anime-button").on("click", function(){
+function displayImages() {
+$(".anime-button").on("click", function() {
     console.log("click");
     var animeTopic = $(this).attr("data-name");
 
@@ -9,7 +22,7 @@ $(".anime-button").on("click", function(){
     $.ajax({
         url: queryURL,
         method: "GET"
-    }).done(function(response){
+    }).done(function(response) {
         $("#gif-container").empty();
 
         var results = response.data;
@@ -17,13 +30,13 @@ $(".anime-button").on("click", function(){
         for (var i = 0; i < results.length; i++) {
             if (results[i].rating !== "r") {
                 var gifDiv = $("<div class='item'>");
-                var raiting = results[i].rating;
+                var rating = results[i].rating;
                 var p = $("<p>").text("Rating: " + rating);
                 var animeImage = $("<img>");
                 animeImage.attr("src", results[i].images.fixed_height_still.url);
                 animeImage.attr("data-still", results[i].images.fixed_height_still.url);
                 animeImage.attr("data-animate", results[i].images.fixed_height.url);
-                animeImage.attr("data-still", "still");
+                animeImage.attr("data-states", "still");
 
                 gifDiv.append(animeImage);
                 gifDiv.append(p);
@@ -31,7 +44,7 @@ $(".anime-button").on("click", function(){
                 $("#gif-container").prepend(gifDiv);
                 $(animeImage).on("click", function(){
                     var state = $(this).attr("data-state");
-                    if(state === "still"){
+                    if(state === "still") {
                         $(this).attr("src", $(this).attr("data-animate"));
                         $(this).attr("src", $(this).attr("data-animate"));
                         $(this).attr("data-state", "animate");
@@ -44,6 +57,7 @@ $(".anime-button").on("click", function(){
         };
     });
 });
+};
 
 function remakeButtons() {
     $("#add-topic").on("click", function(event) {
@@ -57,7 +71,7 @@ function remakeButtons() {
     });
 };
 
-$(document).ready(function() {
+$(document).ready(function(){
     remakeButtons();
     renderButtons();
     displayImages();
